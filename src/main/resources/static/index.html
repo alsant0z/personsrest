@@ -1,0 +1,174 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>
+            Person Frontend
+        </title>
+        <!-- Load AngularJS -->
+        <script language="javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+        <script language="javascript">
+            var app = angular.module("PersonManagement", []);
+         
+            //Controller Part
+            app.controller("PersonManagementController", function($scope, $http) {
+         
+                //Initialize page with default data which is blank 
+                $scope.persons = [];
+                $scope.form = {
+                    id : -1,
+                    name : "",
+                    street : "",
+                    number : "",
+                    city : "",
+                    state : "",
+                    cellphone : "",
+                    phone : ""
+                };
+         
+                //Now load the data from server
+                _refreshPageData();
+         
+                $scope.submitPerson = function() {
+         
+                    var method = "";
+                    var url = "";
+                    method = "POST";
+                    url = '/rest/pessoa/save';
+         
+                    $http({
+                        method : method,
+                        url : url,
+                        data : angular.toJson($scope.form),
+                        headers : {
+                            'Content-Type' : 'application/json'
+                        }
+                    }).then( _success, _error );
+                };
+         
+                //HTTP DELETE- delete person by Id
+                $scope.removePerson = function(person) {
+                    $http({
+                        method : 'DELETE',
+                        url : '/rest/pessoa/remove/' + person.id
+                    }).then(_success, _error);
+                };
+         
+                /* Private Methods */
+                //HTTP GET- get all persons collection
+                function _refreshPageData() {
+                    $http({
+                        method : 'GET',
+                        url : '/rest/pessoas'
+                    }).then(function successCallback(response) {
+                        $scope.persons = response.data;
+                    }, function errorCallback(response) {
+                        console.log(response.statusText);
+                    });
+                }
+         
+                function _success(response) {
+                    _refreshPageData();
+                    _clearForm()
+                }
+         
+                function _error(response) {
+                    console.log(response.statusText);
+                }
+         
+                //Clear the form
+                function _clearForm() {
+                    $scope.form.name = "";
+                    $scope.form.state = "";
+                    $scope.form.city = "";
+                    $scope.form.street = "";
+                    $scope.form.number = "";
+                    $scope.form.cellphone = "";
+                    $scope.form.phone = "";
+                    $scope.form.id = -1;
+                };
+            });
+        </script>
+        <style>
+            .button {
+                cursor: pointer;
+                color: blue;
+            }
+            td,th{
+                border: 1px solid gray;
+                width: 25%;
+                text-align: left;
+            }
+            table {
+                width: 600px;
+            }
+        </style>
+    <head>
+    <body ng-app="PersonManagement" ng-controller="PersonManagementController">
+         <h1>
+            Person RESTful Api
+        </h1>
+ 
+        <table>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Action</th>
+            </tr>
+ 
+            <tr ng-repeat="person in persons">
+                <td>{{ person.id }}</td>
+                <td>{{ person.name }}</td>
+                <td>{{ person.city }}</td>
+                <td>{{ person.state }}</td>
+                <td><a ng-click="removePerson( person )" class="button">Remove</a></td>
+            </tr>
+ 
+        </table>
+ 
+        <h2>Add Person</h2>
+ 
+        <form ng-submit="submitPerson()">
+            <table>
+                <tr>
+                    <td>ID</td>
+                    <td><input type="text" ng-model="form.id" size="60" /></td>
+                </tr>
+                <tr>
+                    <td>Name</td>
+                    <td><input type="text" ng-model="form.name" size="60" /></td>
+                </tr>
+                <tr>
+                    <td>Street</td>
+                    <td><input type="text" ng-model="form.street" size="60" /></td>
+                </tr>
+                <tr>
+                    <td>Number</td>
+                    <td><input type="text" ng-model="form.number" size="60" /></td>
+                </tr>                                
+                <tr>
+                    <td>City</td>
+                    <td><input type="text" ng-model="form.city" size="60" /></td>
+                </tr>
+                <tr>
+                    <td>State</td>
+                    <td><input type="text" ng-model="form.state" size="60" /></td>
+                </tr>
+                <tr>
+                    <td>Cellphone</td>
+                    <td><input type="text" ng-model="form.cellphone" size="60" /></td>
+                </tr>
+                <tr>
+                    <td>Phone</td>
+                    <td><input type="text" ng-model="form.phone" size="60" /></td>
+                </tr>                                
+                <tr>
+                    <td colspan="2"><input type="submit" value="Submit" /></td>
+                </tr>
+            </table>
+        </form>
+ 
+    </body>
+</html>

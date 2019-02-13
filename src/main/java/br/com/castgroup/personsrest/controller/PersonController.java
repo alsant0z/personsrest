@@ -57,7 +57,7 @@ public class PersonController {
 	 * @throws InvalidIdException if an invalid number was passed as argument.
 	 * @throws PersonNotFoundException if the person was not found in repository.
 	 */
-	@RequestMapping(value = "/pessoa/remove/{id}", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(value = "/pessoa/remove/{id}", method = RequestMethod.DELETE, produces = "application/json")
 	public HttpEntity<Person> remove(@PathVariable("id") String id) throws InvalidIdException, PersonNotFoundException {
 
 		return ResponseEntity.ok(service.remove(id));
