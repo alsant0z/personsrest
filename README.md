@@ -11,7 +11,6 @@
     o	ID
     o	Street
     o	Number
-    o	Neighborhood
     o	City
     o	State
     o	Cellphone
