@@ -15,3 +15,6 @@
     o	State
     o	Cellphone
     o	Phone
+    
+ ### Frontend developed in Angular 1 
+  After running the mvn clean sprint-boot:run, it should be accessed by http://localhost:8080.
